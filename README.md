@@ -1,3 +1,4 @@
+Mental Health FAQ Chatbot
 This project is a Mental Health FAQ Chatbot powered by a machine learning model using TF-IDF (Term Frequency-Inverse Document Frequency) and Cosine Similarity to provide relevant answers to user queries about mental health. The chatbot uses a dataset of mental health-related questions and answers to simulate a conversational assistant.
 
 Features:
