@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Chatbot</title>
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .chat-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 50px;
+            background-color: #ffffff;
+        }
+        .user-input {
+            width: 100%;
+            padding: 10px;
+        }
+        .chat-history {
+            margin-bottom: 20px;
+            height: 300px;
+            overflow-y: scroll;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .message.bot {
+            color: blue;
+        }
+        .message.user {
+            text-align: right;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="chat-box">
+        <h2 class="text-center">Mental Health Chatbot</h2>
+
+        <div class="chat-history" id="chat-history">
+        </div>
+
+        <form id="user-query-form">
+            <div class="form-group">
+                <input type="text" class="form-control user-input" id="user-input" placeholder="Ask me anything about mental health..." required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Send</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+<script>
+    $('#user-query-form').on('submit', function(event) {
+        event.preventDefault();
+        
+        let userInput = $('#user-input').val();
+        $('#chat-history').append(`<div class="message user"><strong>You:</strong> ${userInput}</div>`);
+        $('#user-input').val('');  
+
+        $.ajax({
+            url: '/get_response',
+            method: 'POST',
+            data: { user_input: userInput },
+            success: function(response) {
+                simulateTyping(response);
+            },
+            error: function() {
+                alert("An error occurred while processing your request.");
+            }
+        });
+    });
+
+    function simulateTyping(response) {
+        var chatHistory = $('#chat-history');
+        var messageBox = $('<div class="message bot"><strong>Bot:</strong> </div>').appendTo(chatHistory);
+        
+        var i = 0;
+        var interval = setInterval(function() {
+            if (i < response.length) {
+                messageBox.append(response.charAt(i));
+                i++;
+                chatHistory.scrollTop(chatHistory[0].scrollHeight); 
+            } else {
+                clearInterval(interval); 
+            }
+        }, 10); 
+    }
+</script>
+
+</body>
+</html>
